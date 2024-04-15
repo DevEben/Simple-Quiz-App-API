@@ -1,14 +1,14 @@
 // Import node-fetch
 const fetch = require('node-fetch');
 // Import necessary models
-const { Quiz, Question, Option, UserResponse } = require('../model/quizModels'); 
+const { Quiz, Question, Option, UserResponse } = require('../model/quizModels');
 require('dotenv').config();
 
 
 
 // Function to generate multiple-choice options
 const generateOptions = (question) => {
-    
+
     // Split the question into words
     const words = question.split(' ');
 
@@ -48,7 +48,7 @@ const generateOptions = (question) => {
 
 // Function to generate quiz questions with options using GPT-3
 const generateQuizQuestionsWithOptions = async (topic, numQuestions) => {
-    const apiKey = process.env.OPENAI_API_KEY; 
+    const apiKey = process.env.OPENAI_API_KEY;
     const prompt = `Generate a quiz question about ${topic}.`;
 
     const questionsWithOptions = [];
@@ -62,16 +62,16 @@ const generateQuizQuestionsWithOptions = async (topic, numQuestions) => {
                     'Authorization': `Bearer ${apiKey}`
                 },
                 body: JSON.stringify({
-                    model: 'gpt-3.5-turbo-instruct', 
+                    model: 'gpt-3.5-turbo-instruct',
                     prompt: prompt,
-                    max_tokens: 100 
+                    max_tokens: 100
                 })
             });
 
             const data = await response.json();
 
-             // Check if data.choices is undefined or empty
-             if (!data.choices || data.choices.length === 0) {
+            // Check if data.choices is undefined or empty
+            if (!data.choices || data.choices.length === 0) {
                 console.error('Error: No choices found in API response');
                 continue; // Skip to the next iteration
             }
@@ -100,7 +100,7 @@ const createQuizWithGeneratedQuestions = async (req, res) => {
 
     try {
         const questionsWithOptions = await generateQuizQuestionsWithOptions(topic, numQuestions);
-        
+
         // Create quiz with generated questions and options
         const quiz = await Quiz.create({
             title: `Quiz on ${topic}`,
@@ -116,7 +116,7 @@ const createQuizWithGeneratedQuestions = async (req, res) => {
             data: quiz
         });
     } catch (error) {
-        return res.status(500).json({ error: 'Failed to create quiz with generated questions' +error.message });
+        return res.status(500).json({ error: 'Failed to create quiz with generated questions' + error.message });
     }
 }
 
@@ -144,7 +144,7 @@ const createQuiz = async (req, res) => {
             data: quiz
         });
     } catch (error) {
-        return res.status(500).json({ error: 'Failed to create quiz' +error.message });
+        return res.status(500).json({ error: 'Failed to create quiz' + error.message });
     }
 }
 
@@ -163,7 +163,7 @@ const getQuizzes = async (req, res) => {
             data: quizzes
         });
     } catch (error) {
-        return res.status(500).json({ error: 'Failed to fetch quizzes' +error.message });
+        return res.status(500).json({ error: 'Failed to fetch quizzes' + error.message });
     }
 }
 
@@ -188,7 +188,7 @@ async function createQuestion(req, res) {
             data: Newquestion
         });
     } catch (error) {
-        return res.status(500).json({ error: 'Failed to create question' +error.message });
+        return res.status(500).json({ error: 'Failed to create question' + error.message });
     }
 }
 
@@ -207,7 +207,7 @@ const getQuestions = async (req, res) => {
             data: questions
         });
     } catch (error) {
-        return res.status(500).json({ error: 'Failed to fetch questions' +error.message });
+        return res.status(500).json({ error: 'Failed to fetch questions' + error.message });
     }
 }
 
@@ -223,15 +223,15 @@ async function createOption(req, res) {
             });
         }
         const Newoption = await Option.create({
-            option: option, 
-            questionId: questionId, 
+            option: option,
+            questionId: questionId,
         });
         return res.status(201).json({
             message: "option created successfully.",
             data: Newoption
         });
     } catch (error) {
-        return res.status(500).json({ error: 'Failed to create option' +error.message });
+        return res.status(500).json({ error: 'Failed to create option' + error.message });
     }
 }
 
@@ -240,7 +240,7 @@ async function createOption(req, res) {
 const getOptions = async (req, res) => {
     try {
         const options = await Option.find();
-        if(!options.length <= 0) {
+        if (!options.length <= 0) {
             return res.status(404).json({
                 message: "No options found!"
             });
@@ -250,7 +250,7 @@ const getOptions = async (req, res) => {
             data: options
         });
     } catch (error) {
-        return res.status(500).json({ error: 'Failed to fetch options' +error.message });
+        return res.status(500).json({ error: 'Failed to fetch options' + error.message });
     }
 }
 
@@ -265,7 +265,7 @@ async function createUserResponse(req, res) {
             data: userResponse
         });
     } catch (error) {
-        return res.status(500).json({ error: 'Failed to create user response' +error.message });
+        return res.status(500).json({ error: 'Failed to create user response' + error.message });
     }
 }
 
@@ -285,7 +285,7 @@ const getUserResponses = async (req, res) => {
             data: userResponses
         });
     } catch (error) {
-        return res.status(500).json({ error: 'Failed to fetch user responses' +error.message });
+        return res.status(500).json({ error: 'Failed to fetch user responses' + error.message });
     }
 }
 
